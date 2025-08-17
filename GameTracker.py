@@ -183,7 +183,7 @@ class PlatformsList:
         self.__list.append(platform)
     
     #show platform list
-    
+
 
 
     #update plataform
@@ -386,7 +386,11 @@ def genre_section(plataform_list:PlatformsList):
         elif opc == 2:
             pass
         elif opc == 3:
-
+            pass
+        elif opc == 4:
+            end = True
+        elif opc is not [1,2,3,4]:
+            print("Opcion no valida, intenta de nuevo.")
 
 def main_menu():
     print("""Menu
