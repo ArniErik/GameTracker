@@ -115,37 +115,36 @@ class GenreList:
 
 class Platform:
     def __init__(self, name, description = ""):
-        self.id = None
-        self.name = name
-        self.description = description
+        self.__id = None
+        self.__name = name
+        self.__description = description
     
     @property
     def id(self):
-        return self.id
+        return self.__id
     @property 
     def name(self):
-        return self.name
+        return self.__name
     @property
     def description(self):
-        return self.description
+        return self.__description
     @id.setter
     def id(self,id):
-        self.id = id
+        self.__id = id
     @name.setter
     def name(self,name):
-        self.name = name
+        self.__name = name
     @description.setter
     def description(self, description):
-        self.description = description
+        self.__description = description
 
 
     def show_platform(self):
-        print("--------", self.name, "--------")
-        print("Nombre:",self.name)
-        print("Descripcion:",self.description)
+        print("Nombre:",self.__name)
+        print("Descripcion:",self.__description)
     def show_platform_with_id(self):
         self.show_genre()
-        print("ID:",self.id)
+        print("ID:",self.__id)
 class PlatformsList:
     def __init__(self, path):
         self.__list = []
@@ -155,13 +154,18 @@ class PlatformsList:
         try:
             with open(self.__path,"r") as file:
                 data = json.load(file)
-                self.__list = []
-                for p in data:
-                    platform =Platform(p["Name"],p["Description"])
-                    platform.id = p["Id"]
-                    self.__list.append(platform)
+        except json.JSONDecodeError:
+            print("Sin archivos por cargar")
+            self.__list = []
         except FileNotFoundError:
             print("Error:Archivo no encontrado.")
+            self.__list = []
+        else:
+            self.__list = []
+            for p in data:
+                platform =Platform(p["Name"],p["Description"])
+                platform.id = p["Id"]
+                self.__list.append(platform)
 
     def save_platform_list(self):
         data = []
@@ -183,8 +187,17 @@ class PlatformsList:
         self.__list.append(platform)
     
     #show platform list
+    def show_platform_list(self):
+        print("-------Plataformas-------")
+        for platform in self.__list:
+            platform.show_platform()
+            print("-------------------------")
 
-
+    def show_platform_list_with_id(self):
+        print("-------Plataformas-------")
+        for platform in self.__list:
+            platform.show_platform_with_id()
+            print("-------------------------")  
 
     #update plataform
 
@@ -342,7 +355,6 @@ def add_genre_process(genre_list:GenreList):
     description = input("Descripcion:")
     genre = Genre(name,description)
     genre_list.add_genre_list(genre)
-    pass
 def update_genre_process(genre_list:GenreList):
     genre_list.show_genre_list_with_id()
     id = get_number("Selecciona el id del genero a modificar(-1 para salir):")
@@ -370,11 +382,11 @@ def delete_genre_process(genre_list:GenreList):
     if id >= 0:
         genre_list.delete_genre_by_id(id)
 #Seccion de plataformas
-def genre_section(plataform_list:PlatformsList):
-    
+def platform_section(platform_list:PlatformsList):
+    platform_list.show_platform_list()
     end = False
     while not end:
-        print("""Menu Genero
+        print("""Menu Plataforma
 1)Agregar plataforma
 2)Actualizar plataforma
 3)Borrar plataforma
@@ -382,7 +394,7 @@ def genre_section(plataform_list:PlatformsList):
         """)
         opc = get_number("Selecciona una opcion:")
         if opc == 1:
-            pass
+            add_platform_process(platform_list)
         elif opc == 2:
             pass
         elif opc == 3:
@@ -391,6 +403,14 @@ def genre_section(plataform_list:PlatformsList):
             end = True
         elif opc is not [1,2,3,4]:
             print("Opcion no valida, intenta de nuevo.")
+def add_platform_process(platform_list:PlatformsList):
+    print("Agregando nueva plataforma.")
+    name = input("Nombre:")
+    description = input("Descripcion:")
+    platform = Platform(name,description)
+    platform_list.add_platform(platform)
+
+
 
 def main_menu():
     print("""Menu
@@ -404,7 +424,7 @@ def main_menu():
 8)Salir
 """)
     
-def extra_menu(genre_list):
+def extra_menu(genre_list,platform_list):
     end = False
     while not end:
         print("""Menu de extras
@@ -416,7 +436,7 @@ def extra_menu(genre_list):
         if opc == 1:
             genre_section(genre_list)
         elif opc == 2:
-            pass
+            platform_section(platform_list)
         elif opc == 3:
             end = True
         elif opc is not [1,2,3]:
@@ -425,6 +445,8 @@ def extra_menu(genre_list):
     
 def main():
     genre_list = GenreList("Data/Genre.json")
+    platform_list = PlatformsList("Data/Platforms.json")
+    platform_list.load_platform_list()
     genre_list.load_genre_list()
     end = False
     while not end:
@@ -441,9 +463,10 @@ def main():
         elif opc == 5:
             pass
         elif opc == 6:
-            extra_menu(genre_list)
+            extra_menu(genre_list,platform_list)
         elif opc == 7:
             genre_list.save_genre_list()
+            platform_list.save_platform_list()
             print("Todos los datos guardados")
         elif opc == 8:
             end = True
