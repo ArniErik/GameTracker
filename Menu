@@ -1,0 +1,65 @@
+Menu
+1)Agregar un juego
+    Agregar juego (funcion)
+2)Ver lista de juegos
+    -Mostrar todos los juegos (funcion)
+    1)ordernar juegos
+        1)Ordenar por alfabeto
+        2)ordenar por fecha de finalizacion(Los no terminados hasta el final)
+        3)ordenar por calificacion mayor
+        4)Por fecha de finalizacion
+        5)Salir
+    2)salir
+3)Marcar como completado un juego
+    Mostrar juegos sin completar con su id y si se selecciona el id se setea como cmpletado,dar la opcion de salir
+    1)Se termino hoy
+    2)Establecer fecha en que se termino
+    3)Salir
+4)Buscar juegos
+    1)Buscar por nombre
+        Escribir el nombre con la opcion de salir
+    2)Buscar por genero
+        Mostrar lista de generos a seleccionar con la opcion de salir
+    3)Buscar por plataforma
+        Mostrar lista de plataformas a seleccionar con la opcion de salir
+    4)Buscar juegos terminado
+        Mostrar juegos terminados y la opcion de salir
+    5)Buscar juegos pendientes
+        Mostrar juegos pendientes y la opcion de salir
+    6)Salir
+5)Borrar o actualizar juego
+    1)Borrar juego
+        Mostrar juegos con ID y la id que se selecciona se borra ese juego dar la opcion de salir si no se quiere borrar
+    2)Actualizar juego
+        Mostrar juegos con ID y la id que se selecciona se quiere actualizar y mostrar el siguiente menu
+        1)Actualizar nombre
+        2)Actualizar descripcion
+        3)Actualizar genero
+        4)Actualizar plataforma
+        5)Salir
+    3)Salir
+6)Extras
+    1)Ver lista de generos
+        Mostrar lista de generos
+        1)Agregar genero
+        2)Actualizar genero
+            Mostrar generos con id y se tiene que seleccionar un id del genero que se quiere actualizar al seleccionar sale el sig menu
+            1)Actualizar nombre
+            2)Actualizar descripcion
+            3)Salir
+        3)Borrar genero
+            Mostrar generos con id y se tiene que seleccionar un id del genero que se quiere borrar
+        4)Salir
+    2)Ver lista de plataformas
+        1)Agregar plataforma
+        2)Actualizar plataforma
+            Mostrar plataformas con id y se tiene que seleccionar un id del plataforma que se quiere actualizar al seleccionar sale el sig menu
+            1)Actualizar nombre
+            2)Actualizar descripcion
+            3)Salir
+        3)Borrar plataforma
+            Mostrar plataformas con id y se tiene que seleccionar un id de la plataforma que se quiere borrar
+        4)Salir
+    3)Salir
+7)Guardar
+8)Salir

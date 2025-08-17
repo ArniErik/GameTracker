@@ -1,0 +1,12 @@
+[
+    {
+        "Id": 0,
+        "Name": "Plataformas",
+        "Description": "Saltar entre obstaculos"
+    },
+    {
+        "Id": 1,
+        "Name": "Disparos",
+        "Description": "Implica disparar."
+    }
+]
