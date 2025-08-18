@@ -1,1 +1,12 @@
-[]
+[
+    {
+        "Id": 0,
+        "Name": "Plataformas",
+        "Description": "Trata sobre brincar sobre barios obstaculos suele ser en 2d."
+    },
+    {
+        "Id": 1,
+        "Name": "Disparos",
+        "Description": "Sueltrata de disparar armas de fuego pero no tiene que ser obligatoriamente eso."
+    }
+]

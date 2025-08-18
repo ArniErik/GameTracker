@@ -105,8 +105,8 @@ class GenreList:
         for i,genre in enumerate(self.__list):
             if genre.id == id:
                 del self.__list[i]
+                print("Se elimino el genero de Id:",id)
                 break
-        print("Se elimino el genero de Id:",id)
 
     def get_genre_by_id(self,id):
         for genre in self.__list:
@@ -143,7 +143,7 @@ class Platform:
         print("Nombre:",self.__name)
         print("Descripcion:",self.__description)
     def show_platform_with_id(self):
-        self.show_genre()
+        self.show_platform()
         print("ID:",self.__id)
 class PlatformsList:
     def __init__(self, path):
@@ -200,9 +200,33 @@ class PlatformsList:
             print("-------------------------")  
 
     #update plataform
+    def update_platform_name_by_id(self,id,name):
+        for platform in self.__list:
+            if platform.id == id:
+                platform.name = name
+                print("El nombre de la plataforma con id",id,"se cambio a:",name)
+                break
+    
+    def update_platform_description_by_id(self,id,description):
+        for platform in self.__list:
+            if platform.id == id:
+                platform.description = description
+                print("La descripcion de la plataforma con id",id,"se cambio a:",description)
+                break
+    #delete platform
+    def delete_platform_by_id(self,id):
+        for i,platform in enumerate(self.__list):
+            if platform.id == id:
+                del self.__list[i]
+                print("Se elimino la plataforma del id",id)
+                break
 
+    def get_platform_by_id(self,id):
+        for platform in self.__list:
+            if platform.id == id:
+                return platform
 
-
+#nota:el genero y las plataformas se guardara solo el id y al mostrar los datos es que se obtendra la informacion mediante un get by id
 class Game:
     def __init__(self, name, genre, platform, completed, description = "", rating = None, completed_date = None):
         self.__id = None
@@ -396,9 +420,9 @@ def platform_section(platform_list:PlatformsList):
         if opc == 1:
             add_platform_process(platform_list)
         elif opc == 2:
-            pass
+            update_platform_process(platform_list)
         elif opc == 3:
-            pass
+            delete_platform_process(platform_list)
         elif opc == 4:
             end = True
         elif opc is not [1,2,3,4]:
@@ -409,7 +433,32 @@ def add_platform_process(platform_list:PlatformsList):
     description = input("Descripcion:")
     platform = Platform(name,description)
     platform_list.add_platform(platform)
-
+def update_platform_process(platform_list:PlatformsList):
+    platform_list.show_platform_list_with_id()
+    id = get_number("Selecciona el id de la plataforma a modificar(-1 para salir):")
+    if id >= 0 :
+        end = False
+        while not end:
+            print("---Que quieres modificar---")
+            print("1)Nombre")
+            print("2)Descripcion")
+            print("3)Salir")
+            opc = get_number("Selecciona una opcion:")
+            if opc == 1:
+                name = input("Introduce el nuevo nombre:")
+                platform_list.update_platform_name_by_id(id,name)
+            elif opc == 2:
+                description = input("Introduce la nueva descripcion:")
+                platform_list.update_platform_description_by_id(id,description)
+            elif opc ==3:
+                end = True
+            elif opc is not [1,2,3]:
+                print("Opcion no valida")
+def delete_platform_process(platform_list:PlatformsList):
+    platform_list.show_platform_list_with_id()
+    id = get_number("Selecciona el id de la plataforma a eliminar(-1 para salir):")
+    if id >= 0:
+        platform_list.delete_platform_by_id(id)
 
 
 def main_menu():

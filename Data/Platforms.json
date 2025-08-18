@@ -1,0 +1,12 @@
+[
+    {
+        "Id": 0,
+        "Name": "PC",
+        "Description": "Todo tipo de computadora ya sea de escritorio o portatil."
+    },
+    {
+        "Id": 1,
+        "Name": "Xbox 360",
+        "Description": "es la segunda consola de microsoft, ya tiene es un poco vieja pero tiene muy buenos juegos."
+    }
+]
