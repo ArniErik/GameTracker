@@ -226,13 +226,12 @@ class PlatformsList:
             if platform.id == id:
                 return platform
 
-#nota:el genero y las plataformas se guardara solo el id y al mostrar los datos es que se obtendra la informacion mediante un get by id
 class Game:
-    def __init__(self, name, genre, platform, completed, description = "", rating = None, completed_date = None):
+    def __init__(self, name, genres_list : list, platform, completed, description = "", rating = None, completed_date = None):
         self.__id = None
         self.__name = name
         self.__description = description
-        self.__genre = genre
+        self.__genres_list = genres_list
         self.__platform = platform
         self.__completed = completed
         self.__rating = rating
@@ -245,8 +244,8 @@ class Game:
     def name(self):
         return self.__name
     @property
-    def genre(self):
-        return self.__genre
+    def genres_list(self):
+        return self.__genres_list
     @property
     def platform(self):
         return self.__platform
@@ -269,9 +268,9 @@ class Game:
     @name.setter
     def name(self,name):
         self.__name = name
-    @genre.setter
-    def genre(self, genre):
-        self.__genre = genre
+    @genres_list.setter
+    def genres_id(self, genres_list):
+        self.__genres_list = genres_list
     @platform.setter
     def platform(self, platform):
         self.__platform = platform
@@ -288,10 +287,18 @@ class Game:
     def completed_date(self,completed_date):
         self.__completed_date = completed_date
 
+    def add_genre_to_game(self,genre:Genre):
+        self.__genres_list.append(genre)
+    def delete_genre_to_game_by_id(self,id):
+        for i,genre in enumerate(self.__genres_list):
+            if genre.id == id:
+                del self.genres_list[i]
+                break
     def show_game(self):
         print("******", self.__name,"******")
         print("Description:",self.__description)
-        print("Genero:", self.__genre)
+        for genre in self.genres_list:
+            genre.show_genre()
         print("Plataforma:", self.__platform)
         print("Completado:","Terminado" if self.__completed else "Pendiente")
         print(f"Calificacion: {self.__rating}" if self.__rating is not None else "Sin Calificar!!")
@@ -299,6 +306,10 @@ class Game:
     def show_game_name_and_id(self):
         print("--------")
         print("ID:", self.__id, "Nombre:",self.__name)
+    def show_game_with_id_genres(self):
+        print(f"-----{self.__name}---------")
+        for genre in self.__genres_list:
+            print(f"Id: {genre.id}, Nombre: {genre.name}")
 class GamesList:
     def __init__(self, path):
         self.__list = []
@@ -308,21 +319,39 @@ class GamesList:
         try:
             with open(self.__path, "r") as file:
                 data = json.load(file)
-                self.__list = []
-                for g in data:
-                    game = Game(g["Name"],g["Genre"],g["Platform"],g["Completed"],g["Description"],g["Rating"],g["Completed_Date"])
-                    game.id = g["Id"]
-                    self.__list.append(game)
+        except json.JSONDecodeError:
+            print("Sin archivo por cargar")
+            self.__list = []
         except FileNotFoundError:
             print("Errfor:Archivo no encontrado")
+            self.__list = []
+        else:
+            self.__list = []
+            for g in data:
+                genre_list = []
+                for genre_dicc in g["Genres_list"]:
+                    genre = genre(genre_dicc["Name"],genre_dicc["Description"])
+                    genre.id = genre_dicc["Id"]
+                    genre_list.append(genre)
+                game = Game(g["Name"],genre_list,g["Platform"],g["Completed"],g["Description"],g["Rating"],g["Completed_Date"])
+                game.id = g["Id"]
+                self.__list.append(game)    
 
     def save_games_list(self):
         data = []
+        
         for game in self.__list:
+            genre_dicc = []
+            for genre in game.genres_list:
+                genre_dicc.append({
+                    "Id" : genre.id,
+                    "Name" : genre.name,
+                    "Description" : genre.description
+                })
             data.append({
                 "Id" : game.id,
                 "Name" : game.name,
-                "Genre" : game.genre,
+                "Genres_list" : genre_dicc,
                 "Platform" : game.platform,
                 "Completed" : game.completed,
                 "Description" : game.description,
