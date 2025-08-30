@@ -1,5 +1,5 @@
 Menu
-1)Agregar un juego
+-1)Agregar un juego
     Agregar juego (funcion)
 2)Ver lista de juegos
     -Mostrar todos los juegos (funcion)
@@ -38,7 +38,7 @@ Menu
         4)Actualizar plataforma
         5)Salir
     3)Salir
-6)Extras
+-6)Extras
     1)Ver lista de generos
         Mostrar lista de generos
         1)Agregar genero
@@ -61,5 +61,5 @@ Menu
             Mostrar plataformas con id y se tiene que seleccionar un id de la plataforma que se quiere borrar
         4)Salir
     3)Salir
-7)Guardar
-8)Salir
+-7)Guardar
+-8)Salir

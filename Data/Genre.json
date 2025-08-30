@@ -1,8 +1,8 @@
 [
     {
         "Id": 0,
-        "Name": "Plataformas",
-        "Description": "Trata sobre brincar sobre barios obstaculos suele ser en 2d."
+        "Name": "Default",
+        "Description": "Default"
     },
     {
         "Id": 1,

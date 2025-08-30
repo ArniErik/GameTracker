@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 class Genre:
     def __init__(self, name, description=""):
@@ -53,7 +54,7 @@ class GenreList:
                 genre =Genre(d["Name"],d["Description"])
                 genre.id = d["Id"]
                 self.__list.append(genre)
-                print("Se cargaron",len(self.__list),"generos")
+            print("Se cargaron",len(self.__list),"generos")
     
     def save_genre_list(self):
         data = []
@@ -108,7 +109,7 @@ class GenreList:
                 print("Se elimino el genero de Id:",id)
                 break
 
-    def get_genre_by_id(self,id):
+    def get_genre_by_id(self,id)->Genre:
         for genre in self.__list:
             if genre.id == id:
                 return genre
@@ -166,7 +167,7 @@ class PlatformsList:
                 platform =Platform(p["Name"],p["Description"])
                 platform.id = p["Id"]
                 self.__list.append(platform)
-
+    
     def save_platform_list(self):
         data = []
         for platform in self.__list:
@@ -225,6 +226,9 @@ class PlatformsList:
         for platform in self.__list:
             if platform.id == id:
                 return platform
+
+    def get_len(self):
+        return len(self.__list)
 
 class Game:
     def __init__(self, name, genres_list : list, platform, completed, description = "", rating = None, completed_date = None):
@@ -330,10 +334,12 @@ class GamesList:
             for g in data:
                 genre_list = []
                 for genre_dicc in g["Genres_list"]:
-                    genre = genre(genre_dicc["Name"],genre_dicc["Description"])
+                    genre = Genre(genre_dicc["Name"],genre_dicc["Description"])
                     genre.id = genre_dicc["Id"]
                     genre_list.append(genre)
-                game = Game(g["Name"],genre_list,g["Platform"],g["Completed"],g["Description"],g["Rating"],g["Completed_Date"])
+                platform = Platform(g["Platform"]["Name"],g["Platform"]["Description"])
+                platform.id = g["Platform"]["Id"]
+                game = Game(g["Name"],genre_list,platform,g["Completed"],g["Description"],g["Rating"],datetime.strptime(g["Completed_Date"],"%y-%m-%d").date())
                 game.id = g["Id"]
                 self.__list.append(game)    
 
@@ -348,15 +354,20 @@ class GamesList:
                     "Name" : genre.name,
                     "Description" : genre.description
                 })
+            platform = {
+                "Id": game.platform.id,
+                "Name" : game.platform.name,
+                "Description" : game.platform.description
+            }
             data.append({
                 "Id" : game.id,
                 "Name" : game.name,
                 "Genres_list" : genre_dicc,
-                "Platform" : game.platform,
+                "Platform" : platform,
                 "Completed" : game.completed,
                 "Description" : game.description,
                 "Rating" : game.rating,
-                "Completed_Date" : game.completed_date
+                "Completed_Date" : game.completed_date.strftime("%y-%m-%d")
             })
         with open(self.__path,"w") as file:
             json.dump(data,file, indent=4)
@@ -368,6 +379,29 @@ class GamesList:
                 initial_id = g.id
         game.id = initial_id
         self.__list.append(game)
+
+def get_date():
+    end_get_date = False
+    while not end_get_date:
+        print("Terminaste el juego el dia de hoy?")
+        print("1)Si")
+        print("2)No")
+        answer = get_number("Respuesta:")
+        if answer == 1:
+            date = datetime.today().date()
+            end_get_date = True
+        elif answer == 2:
+            while True:
+                date_str = input("Ingresa fecha en formato(AAAA-MM-DD):")
+                try:
+                    date = datetime().strptime(date_str,"%y-%m-%d").date()
+                    break
+                except ValueError:
+                    print("Formato incorrecto")
+            end_get_date = True
+        else:
+            print("Introduce una opcion valida.")
+    return date
 
 def get_number(text):
     is_number = False
@@ -411,7 +445,7 @@ def add_genre_process(genre_list:GenreList):
 def update_genre_process(genre_list:GenreList):
     genre_list.show_genre_list_with_id()
     id = get_number("Selecciona el id del genero a modificar(-1 para salir):")
-    if id >= 0 :
+    if id > 0 :
         end = False
         while not end:
             print("---Que quieres modificar---")
@@ -432,7 +466,7 @@ def update_genre_process(genre_list:GenreList):
 def delete_genre_process(genre_list:GenreList):
     genre_list.show_genre_list_with_id()
     id = get_number("Selecciona el id del genero a eliminar(-1 para salir):")
-    if id >= 0:
+    if id > 0:
         genre_list.delete_genre_by_id(id)
 #Seccion de plataformas
 def platform_section(platform_list:PlatformsList):
@@ -465,7 +499,7 @@ def add_platform_process(platform_list:PlatformsList):
 def update_platform_process(platform_list:PlatformsList):
     platform_list.show_platform_list_with_id()
     id = get_number("Selecciona el id de la plataforma a modificar(-1 para salir):")
-    if id >= 0 :
+    if id > 0 :
         end = False
         while not end:
             print("---Que quieres modificar---")
@@ -486,10 +520,82 @@ def update_platform_process(platform_list:PlatformsList):
 def delete_platform_process(platform_list:PlatformsList):
     platform_list.show_platform_list_with_id()
     id = get_number("Selecciona el id de la plataforma a eliminar(-1 para salir):")
-    if id >= 0:
+    if id > 0:
         platform_list.delete_platform_by_id(id)
+#Seccion de juegos
+def add_game_process(game_list:GamesList,genre_list:GenreList,platform_list:PlatformsList):
+    print("Añadiendo un juego.")
+    exit = input("Escribe lo que sea para continar(-1 para salir):")
+    if exit != -1:
+        name = input("Introduce el nombre del juego:")
+        end_genre_selection = False
+        genres_to_add = []
+        #hacer la lista de generos para el juego
+        while not end_genre_selection:
+            print("Generos a agregar")
+            genre_list.show_genre_list_with_id()
+            opc = get_number("Selcciona el id del genero a agregar(-1 salir):")
+            if opc < 0:
+                genres_to_add.append(genre_list.get_genre_by_id(0))  
+                end_genre_selection = True
+            else:
+                try:
+                    repeated = False
+                    genre_to_add = genre_list.get_genre_by_id(opc)
+                    for genre in genres_to_add:
+                        if genre.id == genre_to_add.id:
+                            repeated = True
+                            break
+                    if not repeated:
+                        genres_to_add.append(genre_to_add)
+                    else:
+                        print("Este genero se esta repitiendo")
+                except:
+                    print("Error:fuera de rango")
+        #agregar la plataforma en la que se jugo este juego
+        print("Agregando plataforma")
+        platform_list.show_platform_list_with_id()
+        adding_platform = False
+        #se tiene que agregar lo que pasaria si no se tiene ninguna plataforma registrada
+        if platform_list.get_len() > 0: 
+            while not adding_platform:
+                opc = get_number("Selecciona el id de la plataforma a agregar:")
+                try:
+                    platform = platform_list.get_platform_by_id(opc)
+                except:
+                    print("Error:Fuera de rango selecciona una opcion valida")
+                else:
+                    adding_platform = True
+        else:
+            platform = platform_list.get_platform_by_id
 
-
+        end_complete_game = False
+        while not end_complete_game:
+            print("Se termino el juego?")
+            print("1)Si")
+            print("2)No")
+            opc = get_number("Opcion:")
+            if opc == 1:
+                completed = True
+                end_complete_game = True
+            elif opc == 2:
+                completed = False
+                end_complete_game = True
+            else:
+                print("Selecciona una opcion valida")
+        description = input("Escribe una descripcion del videojuego:")
+        end_game_rating = False
+        while not end_game_rating:
+            print("Califica el videojuego del 1 al 10.")
+            rate = get_number("Calificacion:")
+            if rate > 10 or rate < 0:
+                print("Da una respuesta valida")
+            else:
+                end_game_rating = True 
+        date = get_date()
+        game = Game(name,genres_to_add,platform,completed,description,rate,date)
+        game_list.add_game(game)
+        print(f"El juego {game.name} fue agregado")
 def main_menu():
     print("""Menu
 1)Agregar un juego
@@ -501,7 +607,7 @@ def main_menu():
 7)Guardar
 8)Salir
 """)
-    
+
 def extra_menu(genre_list,platform_list):
     end = False
     while not end:
@@ -519,19 +625,21 @@ def extra_menu(genre_list,platform_list):
             end = True
         elif opc is not [1,2,3]:
             print("Opcion no valida intenta de nuevo")
-    
-    
+
+
 def main():
     genre_list = GenreList("Data/Genre.json")
     platform_list = PlatformsList("Data/Platforms.json")
+    game_list = GamesList("Data/Games.json")
     platform_list.load_platform_list()
     genre_list.load_genre_list()
+    game_list.load_games_list()
     end = False
     while not end:
         main_menu()
         opc = get_number("Selecciona una opcion:")
         if opc == 1:
-            pass
+            add_game_process(game_list,genre_list,platform_list)
         elif opc == 2:
             pass
         elif opc == 3:
@@ -545,6 +653,7 @@ def main():
         elif opc == 7:
             genre_list.save_genre_list()
             platform_list.save_platform_list()
+            game_list.save_games_list()
             print("Todos los datos guardados")
         elif opc == 8:
             end = True

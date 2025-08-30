@@ -1,0 +1,22 @@
+[
+    {
+        "Id": null,
+        "Name": "agdgfa",
+        "Genres_list": [
+            {
+                "Id": 0,
+                "Name": "Default",
+                "Description": "Default"
+            }
+        ],
+        "Platform": {
+            "Id": 1,
+            "Name": "PC",
+            "Description": "Todo tipo de computadora ya sea de escritorio o portatil."
+        },
+        "Completed": true,
+        "Description": "adfagdag",
+        "Rating": 5,
+        "Completed_Date": "25-08-22"
+    }
+]
