@@ -339,7 +339,7 @@ class GamesList:
                     genre_list.append(genre)
                 platform = Platform(g["Platform"]["Name"],g["Platform"]["Description"])
                 platform.id = g["Platform"]["Id"]
-                game = Game(g["Name"],genre_list,platform,g["Completed"],g["Description"],g["Rating"],datetime.strptime(g["Completed_Date"],"%y-%m-%d").date())
+                game = Game(g["Name"],genre_list,platform,g["Completed"],g["Description"],g["Rating"],datetime.strptime(g["Completed_Date"],"%y-%m-%d").date() if g["Completed_Date"] is not None else None )
                 game.id = g["Id"]
                 self.__list.append(game)    
 
@@ -367,18 +367,49 @@ class GamesList:
                 "Completed" : game.completed,
                 "Description" : game.description,
                 "Rating" : game.rating,
-                "Completed_Date" : game.completed_date.strftime("%y-%m-%d")
+                "Completed_Date" : game.completed_date.strftime("%y-%m-%d") if game.completed_date is not None else None
             })
         with open(self.__path,"w") as file:
             json.dump(data,file, indent=4)
 
     def add_game(self, game):
-        initial_id = game.id
+        initial_id = -1
         for g in self.__list:
             if g.id > initial_id:
                 initial_id = g.id
-        game.id = initial_id
+        game.id = initial_id + 1
         self.__list.append(game)
+
+    def show_games(self):
+        print("---------Juegos-----------")
+        for game in self.__list:
+            game.show_game()
+            print("--------------------------")
+
+    def get_game_by_id(self,id) -> Game:
+        for game in self.__list:
+            if game.id == id:
+                return game
+
+    def show_games_with_id(self):
+        print("---------Juegos-----------")
+        for game in self.__list:
+            game.show_game_name_and_id()
+            print("--------------------------")        
+
+    def show_games_completed(self):
+        games_complete = [game for game in self.__list if game.completed]
+        print("-------Juegos Completados ---------")
+        for game in games_complete:
+            game.show_game_name_and_id()
+            print("-----------------------------------")
+    
+    def show_games_not_completed(self):
+        games_not_completed = [game for game in self.__list if not game.completed]
+        for game in games_not_completed:
+            game.show_game_name_and_id()
+            print("-----------------------------------")
+
 
 def get_date():
     end_get_date = False
@@ -536,8 +567,23 @@ def add_game_process(game_list:GamesList,genre_list:GenreList,platform_list:Plat
             genre_list.show_genre_list_with_id()
             opc = get_number("Selcciona el id del genero a agregar(-1 salir):")
             if opc < 0:
-                genres_to_add.append(genre_list.get_genre_by_id(0))  
-                end_genre_selection = True
+                if len(genre_to_add) == 0:
+                    try:
+                        repeated = False
+                        genre_to_add = genre_list.get_genre_by_id(0)
+                        for genre in genres_to_add:
+                            if genre.id == genre_to_add.id:
+                                repeated = True
+                                break
+                        if not repeated:
+                            genres_to_add.append(genre_to_add)
+                            end_genre_selection = True
+                        else:
+                            end_genre_selection = True
+                    except:
+                        end_genre_selection = True
+                else:
+                    end_genre_selection = True
             else:
                 try:
                     repeated = False
@@ -567,7 +613,7 @@ def add_game_process(game_list:GamesList,genre_list:GenreList,platform_list:Plat
                 else:
                     adding_platform = True
         else:
-            platform = platform_list.get_platform_by_id
+            platform = platform_list.get_platform_by_id(0)
 
         end_complete_game = False
         while not end_complete_game:
@@ -592,10 +638,35 @@ def add_game_process(game_list:GamesList,genre_list:GenreList,platform_list:Plat
                 print("Da una respuesta valida")
             else:
                 end_game_rating = True 
-        date = get_date()
+        if completed:
+            date = get_date()
+        else:
+            date = None
         game = Game(name,genres_to_add,platform,completed,description,rate,date)
         game_list.add_game(game)
         print(f"El juego {game.name} fue agregado")
+
+def completed_game_process(game_list:GamesList):
+
+    while True:
+        game_list.show_games_not_completed()
+        opc = get_number("Id del juego completado (-1 para salir):")
+        if opc < 0:
+            print("Saliste de la seccion de completar un juego.")
+            break
+        else:
+            try:
+                game_selected = game_list.get_game_by_id(opc)
+            except:
+                print("Error:elecciona una opcion valida.")
+            else:
+                game_selected.completed = True
+                date = get_date()
+                game_selected.completed_date = date
+                print(f"El juego {game_selected.name} fue completado.")
+                break
+
+
 def main_menu():
     print("""Menu
 1)Agregar un juego
@@ -626,7 +697,6 @@ def extra_menu(genre_list,platform_list):
         elif opc is not [1,2,3]:
             print("Opcion no valida intenta de nuevo")
 
-
 def main():
     genre_list = GenreList("Data/Genre.json")
     platform_list = PlatformsList("Data/Platforms.json")
@@ -643,7 +713,7 @@ def main():
         elif opc == 2:
             pass
         elif opc == 3:
-            pass
+            completed_game_process(game_list)
         elif opc == 4:
             pass
         elif opc == 5:

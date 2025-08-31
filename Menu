@@ -10,7 +10,7 @@ Menu
         4)Por fecha de finalizacion
         5)Salir
     2)salir
-3)Marcar como completado un juego
+-3)Marcar como completado un juego
     Mostrar juegos sin completar con su id y si se selecciona el id se setea como cmpletado,dar la opcion de salir
     1)Se termino hoy
     2)Establecer fecha en que se termino

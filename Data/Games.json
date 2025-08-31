@@ -1,6 +1,6 @@
 [
     {
-        "Id": null,
+        "Id": 0,
         "Name": "agdgfa",
         "Genres_list": [
             {
@@ -18,5 +18,45 @@
         "Description": "adfagdag",
         "Rating": 5,
         "Completed_Date": "25-08-22"
+    },
+    {
+        "Id": 1,
+        "Name": "dim",
+        "Genres_list": [
+            {
+                "Id": 0,
+                "Name": "Default",
+                "Description": "Default"
+            }
+        ],
+        "Platform": {
+            "Id": 0,
+            "Name": "Default",
+            "Description": "Default."
+        },
+        "Completed": true,
+        "Description": "afsgadhr",
+        "Rating": 5,
+        "Completed_Date": "25-08-31"
+    },
+    {
+        "Id": 2,
+        "Name": "asd",
+        "Genres_list": [
+            {
+                "Id": 1,
+                "Name": "Disparos",
+                "Description": "Sueltrata de disparar armas de fuego pero no tiene que ser obligatoriamente eso."
+            }
+        ],
+        "Platform": {
+            "Id": 0,
+            "Name": "Default",
+            "Description": "Default."
+        },
+        "Completed": true,
+        "Description": "fafhadjukhhb",
+        "Rating": 1,
+        "Completed_Date": "25-08-31"
     }
 ]
