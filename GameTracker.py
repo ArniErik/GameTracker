@@ -309,7 +309,7 @@ class Game:
         print(f"Se completo el: {self.__completed_date}" if self.__completed_date is not None else "Sin terminar!!")
     def show_game_name_and_id(self):
         print("--------")
-        print("ID:", self.__id, "Nombre:",self.__name)
+        print("ID:", self.__id, ", Nombre:",self.__name)
     def show_game_with_id_genres(self):
         print(f"-----{self.__name}---------")
         for genre in self.__genres_list:
@@ -410,6 +410,8 @@ class GamesList:
             game.show_game_name_and_id()
             print("-----------------------------------")
 
+    #Mostrar juegos en cierto orden
+    
 
 def get_date():
     end_get_date = False
@@ -645,7 +647,26 @@ def add_game_process(game_list:GamesList,genre_list:GenreList,platform_list:Plat
         game = Game(name,genres_to_add,platform,completed,description,rate,date)
         game_list.add_game(game)
         print(f"El juego {game.name} fue agregado")
-
+def show_games_and_filter_section(game_list:GamesList):
+    game_list.show_games()
+    while True:
+        print("Opciones para ordenar.")
+        print("1)Por alfabeto.")
+        print("2)Por fecha.")
+        print("3)Por calificacion.")
+        print("4)Salir.")
+        opc = get_number("Elije una opcion:")
+        if opc == 1:
+            pass
+        elif opc == 2:
+            pass
+        elif opc == 3:
+            pass
+        elif opc == 4:
+            break
+        else:
+            print("Selecciona una opcion valida.")
+    pass
 def completed_game_process(game_list:GamesList):
 
     while True:
