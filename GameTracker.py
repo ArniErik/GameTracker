@@ -301,15 +301,18 @@ class Game:
     def show_game(self):
         print("******", self.__name,"******")
         print("Description:",self.__description)
+        print("--Generos:")
         for genre in self.genres_list:
             genre.show_genre()
-        print("Plataforma:", self.__platform)
+            print("--------")
+        print("--Plataforma:")
+        self.__platform.show_platform()
+        print("--------")
         print("Completado:","Terminado" if self.__completed else "Pendiente")
         print(f"Calificacion: {self.__rating}" if self.__rating is not None else "Sin Calificar!!")
         print(f"Se completo el: {self.__completed_date}" if self.__completed_date is not None else "Sin terminar!!")
     def show_game_name_and_id(self):
-        print("--------")
-        print("ID:", self.__id, ", Nombre:",self.__name)
+        print("--ID:", self.__id, ", Nombre:",self.__name)
     def show_game_with_id_genres(self):
         print(f"-----{self.__name}---------")
         for genre in self.__genres_list:
@@ -381,10 +384,10 @@ class GamesList:
         self.__list.append(game)
 
     def show_games(self):
-        print("---------Juegos-----------")
+        print("#########Juegos#########")
         for game in self.__list:
             game.show_game()
-            print("--------------------------")
+            print("########################")
 
     def get_game_by_id(self,id) -> Game:
         for game in self.__list:
@@ -411,7 +414,26 @@ class GamesList:
             print("-----------------------------------")
 
     #Mostrar juegos en cierto orden
-    
+    def show_games_ordered_by_name(self):
+        games_by_name = sorted(self.__list, key=lambda game: game.name.lower())
+        print("-------Juegos Ordenados por Nombre ---------")
+        for game in games_by_name:
+            game.show_game_name_and_id()
+            print("-----------------------------------")
+    def show_games_ordered_by_date(self):
+        games_by_date = sorted(self.__list,key=lambda game: game.completed_date if game.completed_date is not None else None)
+        print("-------Juegos Ordenados por Fecha ---------")
+        for game in games_by_date:
+            game.show_game_name_and_id()
+            print("Fecha: ", game.completed_date.strftime("%y-%m-%d") if game.completed_date is not None else None)
+            print("-----------------------------------")
+    def show_games_ordered_by_rating(self):
+        games_by_rating = sorted(self.__list, key=lambda game: game.rating, reverse=True)
+        print("-------Juegos Ordenados por Calificación ---------")
+        for game in games_by_rating:
+            game.show_game_name_and_id()
+            print("Calificación: ", game.rating)
+            print("-----------------------------------")
 
 def get_date():
     end_get_date = False
@@ -657,12 +679,13 @@ def show_games_and_filter_section(game_list:GamesList):
         print("4)Salir.")
         opc = get_number("Elije una opcion:")
         if opc == 1:
-            pass
+            game_list.show_games_ordered_by_name()
         elif opc == 2:
-            pass
+            game_list.show_games_ordered_by_date()
         elif opc == 3:
-            pass
+            game_list.show_games_ordered_by_rating()
         elif opc == 4:
+            print("Saliste de la seccion de ordenar juegos.")
             break
         else:
             print("Selecciona una opcion valida.")
@@ -732,7 +755,7 @@ def main():
         if opc == 1:
             add_game_process(game_list,genre_list,platform_list)
         elif opc == 2:
-            pass
+            show_games_and_filter_section(game_list)
         elif opc == 3:
             completed_game_process(game_list)
         elif opc == 4:

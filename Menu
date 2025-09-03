@@ -1,13 +1,13 @@
 Menu
 -1)Agregar un juego
     Agregar juego (funcion)
-2)Ver lista de juegos
+-2)Ver lista de juegos
     -Mostrar todos los juegos (funcion)
     1)ordernar juegos
-        1)Ordenar por alfabeto
-        2)ordenar por fecha de finalizacion(Los no terminados hasta el final)
-        3)ordenar por calificacion mayor
-        5)Salir
+        -1)Ordenar por alfabeto
+        -2)ordenar por fecha de finalizacion(Los no terminados hasta el final)
+        -3)ordenar por calificacion mayor
+        -5)Salir
     2)salir
 -3)Marcar como completado un juego
     Mostrar juegos sin completar con su id y si se selecciona el id se setea como cmpletado,dar la opcion de salir
