@@ -14,7 +14,7 @@ Menu
     1)Se termino hoy
     2)Establecer fecha en que se termino
     3)Salir
-4)Buscar juegos
+-4)Buscar juegos
     1)Buscar por nombre
         Escribir el nombre con la opcion de salir
     2)Buscar por genero
@@ -35,7 +35,9 @@ Menu
         2)Actualizar descripcion
         3)Actualizar genero
         4)Actualizar plataforma
-        5)Salir
+        5)Actualizar fecha de completado
+        6)Actualizar calificacion
+        7)Salir
     3)Salir
 -6)Extras
     1)Ver lista de generos

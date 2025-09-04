@@ -1,27 +1,32 @@
 [
     {
         "Id": 0,
-        "Name": "agdgfa",
+        "Name": "Nombre de verdad",
         "Genres_list": [
             {
                 "Id": 0,
                 "Name": "Default",
                 "Description": "Default"
+            },
+            {
+                "Id": 1,
+                "Name": "Disparos",
+                "Description": "Sueltrata de disparar armas de fuego pero no tiene que ser obligatoriamente eso."
             }
         ],
         "Platform": {
-            "Id": 1,
-            "Name": "PC",
-            "Description": "Todo tipo de computadora ya sea de escritorio o portatil."
+            "Id": 0,
+            "Name": "Default",
+            "Description": "Default."
         },
         "Completed": true,
-        "Description": "adfagdag",
-        "Rating": 5,
-        "Completed_Date": "25-08-22"
+        "Description": "No se de que va",
+        "Rating": 7,
+        "Completed_Date": "25-09-03"
     },
     {
         "Id": 1,
-        "Name": "dim",
+        "Name": "Juego",
         "Genres_list": [
             {
                 "Id": 0,

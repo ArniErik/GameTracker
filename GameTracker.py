@@ -768,6 +768,9 @@ def search_game_by_genre(game_list:GamesList, genre_list:GenreList):
                     break
                 else:
                     print(f"No se encontraron juegos con el genero {genre.name}.")
+        elif id == -1:
+            print("Saliste de la seccion de buscar por genero.")
+            break
 
 def search_game_by_platform(game_list:GamesList, platform_list:PlatformsList):
     while True:
@@ -789,6 +792,9 @@ def search_game_by_platform(game_list:GamesList, platform_list:PlatformsList):
                     break
                 else:
                     print(f"No se encontraron juegos en la plataforma {platform.name}.")
+        elif id == -1:
+            print("Saliste de la seccion de buscar por plataforma.")
+            break
 
 def search_game_by_completed(game_list:GamesList):
     completed_games = [game for game in game_list.get_list() if game.completed]
@@ -810,6 +816,164 @@ def search_game_by_not_completed(game_list:GamesList):
     else:
         print("No se encontraron juegos pendientes.")
 
+def delete_or_update_game_process(game_list:GamesList, genre_list:GenreList, platform_list:PlatformsList):
+    in_process = True
+    while in_process:
+        game_list.show_games_with_id()
+        id = get_number("Selecciona el id del juego a borrar o actualizar(-1 para salir):")
+        if id >= 0:
+            try:
+                game = game_list.get_game_by_id(id)
+            except:
+                print("Error:Selecciona una opcion valida")
+            else:
+                end = False
+                while not end:
+                    print("Juego seleccionado:")
+                    game.show_game()
+                    print("1)Borrar juego")
+                    print("2)Actualizar juego")
+                    print("3)Salir")
+                    opc = get_number("Selecciona una opcion:")
+                    if opc == 1:
+                        game_list.get_list().remove(game)
+                        print(f"El juego {game.name} fue eliminado.")
+                        end = True
+                    elif opc == 2:
+                        update_game_process(game,genre_list,platform_list)
+                    elif opc == 3:
+                        print("Saliste de la seccion de borrar o actualizar juegos.")
+                        end = True
+                    else:
+                        print("Opcion no valida intenta de nuevo")
+        elif id == -1:
+            print("Saliste de la seccion de borrar o actualizar juegos.")
+            in_process = False
+    
+def update_game_process(game:Game, genre_list:GenreList, platform_list:PlatformsList):
+    end = False
+    while not end:
+        print("----Que quieres modificar----")
+        print("1)Nombre")
+        print("2)Descripcion")
+        print("3)Generos")
+        print("4)Plataforma")
+        print("5)Fecha de completado")
+        print("6)Calificacion")
+        print("7)Salir")
+        opc = get_number("Selecciona una opcion:")
+        if opc == 1:
+            name = input("Introduce el nuevo nombre:")
+            game.name = name
+            print("El nombre del juego se cambio a:",name)
+        elif opc == 2:
+            description = input("Introduce la nueva descripcion:")
+            game.description = description
+            print("La descripcion del juego se cambio a:",description)
+        elif opc == 3:
+            end_genre_selection = False
+            while not end_genre_selection:
+                print("Generos actuales del juego:")
+                for genre in game.genres_list:
+                    genre.show_genre_with_id()
+                    print("--------")
+                print("1)Agregar genero")
+                print("2)Eliminar genero")
+                print("3)Salir")
+                opc_genre = get_number("Selecciona una opcion:")
+                if opc_genre == 1:
+                    genre_list.show_genre_list_with_id()
+                    id = get_number("Selecciona el id del genero a agregar(-1 para salir):")
+                    if id >= 0:
+                        try:
+                            genre_to_add = genre_list.get_genre_by_id(id)
+                        except:
+                            print("Error:Selecciona una opcion valida")
+                        else:
+                            repeated = False
+                            for genre in game.genres_list:
+                                if genre.id == genre_to_add.id:
+                                    repeated = True
+                                    break
+                            if not repeated:
+                                game.add_genre_to_game(genre_to_add)
+                                print(f"El genero {genre_to_add.name} fue agregado al juego {game.name}.")
+                            else:
+                                print("Este genero ya esta en el juego.")
+                    elif id == -1:
+                        pass
+                elif opc_genre == 2:
+                    if len(game.genres_list) > 0:
+                        game.show_game_with_id_genres()
+                        id = get_number("Selecciona el id del genero a eliminar(-1 para salir):")
+                        if id > 0:
+                            genre_to_delete = None
+                            for genre in game.genres_list:
+                                if genre.id == id:
+                                    genre_to_delete = genre
+                                    break
+                                if genre_to_delete is not None:
+                                    game.delete_genre_to_game_by_id(id)
+                                    print(f"El genero {genre_to_delete.name} fue eliminado del juego {game.name}.")
+                                else:
+                                    print("Error:Selecciona una opcion valida")
+                        elif id == -1:
+                            pass
+                elif opc_genre == 3:
+                    end_genre_selection = True
+        elif opc == 4:
+            #mostrar la plataforma actual y dar la opcion de cambiarla a otra o salir
+            print("Plataforma actual del juego:")
+            game.platform.show_platform_with_id()
+            print("1) Cambiar plataforma")
+            print("2) Salir")
+            opc_platform = get_number("Selecciona una opcion:")
+            if opc_platform == 1:
+                platform_list.show_platform_list_with_id()
+                id = get_number("Selecciona el id de la nueva plataforma:")
+                if id >= 0:
+                    try:
+                        platform = platform_list.get_platform_by_id(id)
+                    except:
+                        print("Error:Selecciona una opcion valida")
+                    else:
+                        game.platform = platform
+                        print(f"La plataforma del juego {game.name} fue cambiada a {platform.name}.")
+                else:
+                    print("Error:Selecciona una opcion valida")
+            elif opc_platform == 2:
+                pass
+            else:
+                print("Error:Selecciona una opcion valida")
+        elif opc == 5:
+            print("Cambiando fecha de completado del juego.")
+            print("Fecha actual:", game.completed_date.strftime("%y-%m-%d") if game.completed_date is not None else "No tiene fecha de completado")
+            print("1)Eliminar fecha de completado")
+            print("2)Establecer nueva fecha de completado")
+            print("3)Salir")
+            opc_date = get_number("Selecciona una opcion:")
+            if opc_date == 1:
+                game.completed_date = None
+                print(f"La fecha de completado del juego {game.name} fue eliminada.")
+            elif opc_date == 2:
+                game.completed_date = get_date()
+                print(f"La fecha de completado del juego {game.name} fue cambiada a {game.completed_date}.")
+            elif opc_date == 3:
+                pass
+        elif opc == 6:
+            print("Cambiando calificacion del juego.")
+            print("Calificacion actual:", game.rating if game.rating is not None else "No tiene calificacion")
+            print("1)Modificar calificacion")
+            print("2)salir")
+            opc_rate = get_number("Selecciona una opcion:")
+            if opc_rate == 1:
+                new_rating = get_number("Ingresa la nueva calificacion:")
+                game.rating = new_rating
+                print(f"La calificacion del juego {game.name} fue cambiada a {game.rating}.")
+            elif opc_rate == 2:
+                pass
+        elif opc == 7:
+            end = True
 def main_menu():
     print("""Menu
 1)Agregar un juego
@@ -860,7 +1024,7 @@ def main():
         elif opc == 4:
             search_game_process(game_list,genre_list,platform_list)
         elif opc == 5:
-            pass
+            delete_or_update_game_process(game_list,genre_list,platform_list)
         elif opc == 6:
             extra_menu(genre_list,platform_list)
         elif opc == 7:
