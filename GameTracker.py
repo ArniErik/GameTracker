@@ -976,14 +976,9 @@ def update_game_process(game:Game, genre_list:GenreList, platform_list:Platforms
             end = True
 def main_menu():
     print("""Menu
-1)Agregar un juego
-2)Ver lista de juegos
-3)Completar un juego
-4)Buscar juegos
-5)Borrar o actualizar juegos
-6)Extras
-7)Guardar
-8)Salir
+1)Gestion de juegos
+2)Gestor de generos y plataformas
+3)Guardar y Salir
 """)
 
 def extra_menu(genre_list,platform_list):
@@ -1016,25 +1011,40 @@ def main():
         main_menu()
         opc = get_number("Selecciona una opcion:")
         if opc == 1:
-            add_game_process(game_list,genre_list,platform_list)
+            while True: 
+                print("""Menu
+1)Agregar un juego
+2)Ver lista de juegos
+3)Completar un juego
+4)Buscar juegos
+5)Borrar o actualizar juegos
+6)Salir
+""")
+                opc = get_number("Selecciona una opcion:")
+                if opc == 1:
+                    add_game_process(game_list,genre_list,platform_list)
+                elif opc == 2:
+                    show_games_and_filter_section(game_list)
+                elif opc == 3:
+                    completed_game_process(game_list)
+                elif opc == 4:
+                    search_game_process(game_list,genre_list,platform_list)
+                elif opc == 5:
+                    delete_or_update_game_process(game_list,genre_list,platform_list)
+                elif opc == 6:
+                    print("Saliste de la seccion de gestion de juegos.")
+                    break
+                else:
+                    print("Opcion no valida intenta de nuevo")
         elif opc == 2:
-            show_games_and_filter_section(game_list)
-        elif opc == 3:
-            completed_game_process(game_list)
-        elif opc == 4:
-            search_game_process(game_list,genre_list,platform_list)
-        elif opc == 5:
-            delete_or_update_game_process(game_list,genre_list,platform_list)
-        elif opc == 6:
             extra_menu(genre_list,platform_list)
-        elif opc == 7:
+        elif opc == 3:
             genre_list.save_genre_list()
             platform_list.save_platform_list()
             game_list.save_games_list()
             print("Todos los datos guardados")
-        elif opc == 8:
             end = True
-        elif opc not in [1,2,3,4,5,6,7,8]:
+        else:
             print("Opcion no valida")
 
 main()
