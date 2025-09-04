@@ -490,7 +490,7 @@ def genre_section(genre_list:GenreList):
             delete_genre_process(genre_list)
         elif opc == 4:
             end = True
-        elif opc is not [1,2,3,4]:
+        elif opc not in [1,2,3,4]:
             print("Opcion no valida intente de nuevo")
 def add_genre_process(genre_list:GenreList):
     print("Agregando nuevo genero.")
@@ -517,7 +517,7 @@ def update_genre_process(genre_list:GenreList):
                 genre_list.update_genre_description_by_id(id,description)
             elif opc ==3:
                 end = True
-            elif opc is not [1,2,3]:
+            elif opc not in [1,2,3]:
                 print("Opcion no valida")
 def delete_genre_process(genre_list:GenreList):
     genre_list.show_genre_list_with_id()
@@ -544,7 +544,7 @@ def platform_section(platform_list:PlatformsList):
             delete_platform_process(platform_list)
         elif opc == 4:
             end = True
-        elif opc is not [1,2,3,4]:
+        elif opc not in [1,2,3,4]:
             print("Opcion no valida, intenta de nuevo.")
 def add_platform_process(platform_list:PlatformsList):
     print("Agregando nueva plataforma.")
@@ -571,7 +571,7 @@ def update_platform_process(platform_list:PlatformsList):
                 platform_list.update_platform_description_by_id(id,description)
             elif opc ==3:
                 end = True
-            elif opc is not [1,2,3]:
+            elif opc not in [1,2,3]:
                 print("Opcion no valida")
 def delete_platform_process(platform_list:PlatformsList):
     platform_list.show_platform_list_with_id()
@@ -592,7 +592,7 @@ def add_game_process(game_list:GamesList,genre_list:GenreList,platform_list:Plat
             genre_list.show_genre_list_with_id()
             opc = get_number("Selcciona el id del genero a agregar(-1 salir):")
             if opc < 0:
-                if len(genre_to_add) == 0:
+                if len(genres_to_add) == 0:
                     try:
                         repeated = False
                         genre_to_add = genre_list.get_genre_by_id(0)
@@ -1001,7 +1001,7 @@ def extra_menu(genre_list,platform_list):
             platform_section(platform_list)
         elif opc == 3:
             end = True
-        elif opc is not [1,2,3]:
+        elif opc not in [1,2,3]:
             print("Opcion no valida intenta de nuevo")
 
 def main():
@@ -1034,7 +1034,7 @@ def main():
             print("Todos los datos guardados")
         elif opc == 8:
             end = True
-        elif opc is not [1,2,3,4,5,6,7,8]:
+        elif opc not in [1,2,3,4,5,6,7,8]:
             print("Opcion no valida")
 
 main()
