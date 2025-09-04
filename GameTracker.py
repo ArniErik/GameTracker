@@ -322,7 +322,7 @@ class GamesList:
         self.__list = []
         self.__path = path
     
-    def load_games_list(self):
+    def load_games_list(self,genre_list:GenreList=None, platform_list:PlatformsList=None):
         try:
             with open(self.__path, "r") as file:
                 data = json.load(file)
@@ -330,19 +330,17 @@ class GamesList:
             print("Sin archivo por cargar")
             self.__list = []
         except FileNotFoundError:
-            print("Errfor:Archivo no encontrado")
+            print("Error: Archivo no encontrado")
             self.__list = []
         else:
             self.__list = []
             for g in data:
-                genre_list = []
+                genre_list_to_add = []
                 for genre_dicc in g["Genres_list"]:
-                    genre = Genre(genre_dicc["Name"],genre_dicc["Description"])
-                    genre.id = genre_dicc["Id"]
-                    genre_list.append(genre)
-                platform = Platform(g["Platform"]["Name"],g["Platform"]["Description"])
-                platform.id = g["Platform"]["Id"]
-                game = Game(g["Name"],genre_list,platform,g["Completed"],g["Description"],g["Rating"],datetime.strptime(g["Completed_Date"],"%y-%m-%d").date() if g["Completed_Date"] is not None else None )
+                    genre = genre_list.get_genre_by_id(genre_dicc["Id"])
+                    genre_list_to_add.append(genre)
+                platform = platform_list.get_platform_by_id(g["Platform"]["Id"])
+                game = Game(g["Name"],genre_list_to_add,platform,g["Completed"],g["Description"],g["Rating"],datetime.strptime(g["Completed_Date"],"%y-%m-%d").date() if g["Completed_Date"] is not None else None )
                 game.id = g["Id"]
                 self.__list.append(game)    
 
@@ -747,7 +745,7 @@ def main():
     game_list = GamesList("Data/Games.json")
     platform_list.load_platform_list()
     genre_list.load_genre_list()
-    game_list.load_games_list()
+    game_list.load_games_list(genre_list,platform_list)
     end = False
     while not end:
         main_menu()
