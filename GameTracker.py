@@ -322,6 +322,9 @@ class GamesList:
         self.__list = []
         self.__path = path
     
+    def get_list(self):
+        return self.__list
+
     def load_games_list(self,genre_list:GenreList=None, platform_list:PlatformsList=None):
         try:
             with open(self.__path, "r") as file:
@@ -708,6 +711,104 @@ def completed_game_process(game_list:GamesList):
                 print(f"El juego {game_selected.name} fue completado.")
                 break
 
+def search_game_process(game_list:GamesList,genre_list:GenreList, platform_list:PlatformsList):
+    while True:
+        print("-------Buscar juegos-------")
+        print("1)Buscar juego por nombre")
+        print("2)Buscar juego por genero")
+        print("3)Buscar juego por plataforma")
+        print("4)Buscar juegos terminados")
+        print("5)Buscar juegos pendientes")
+        print("6)Salir")
+        opc = get_number("Selecciona una opcion:")
+        if opc == 1:
+            search_game_by_name(game_list)
+        elif opc == 2:
+            search_game_by_genre(game_list,genre_list)
+        elif opc == 3:
+            search_game_by_platform(game_list,platform_list)
+        elif opc == 4:
+            search_game_by_completed(game_list)
+        elif opc == 5:
+            search_game_by_not_completed(game_list)
+        elif opc == 6:
+            print("Saliste de la seccion de buscar juegos.")
+            break
+        else:
+            print("Selecciona una opcion valida.")
+
+def search_game_by_name(game_list:GamesList):
+    name = input("Introduce el nombre del juego a buscar:")
+    found_games = [game for game in game_list.get_list() if name.lower() in game.name.lower()]
+    if found_games:
+        print(f"Se encontraron {len(found_games)} juegos con el nombre {name}:")
+        for game in found_games:
+            game.show_game()
+            print("--------------------")
+    else:
+        print(f"No se encontraron juegos con el nombre {name}.")
+
+def search_game_by_genre(game_list:GamesList, genre_list:GenreList):
+    while True:
+        genre_list.show_genre_list_with_id()
+        id = get_number("Selecciona el id del genero a buscar(-1 para salir):")
+        if id >= 0:
+            try:
+                genre = genre_list.get_genre_by_id(id)
+            except:
+                print("Error:Selecciona una opcion valida")
+                break
+            else:
+                found_games = [game for game in game_list.get_list() if genre in game.genres_list]
+                if found_games:
+                    print(f"Se encontraron {len(found_games)} juegos con el genero {genre.name}:")
+                    for game in found_games:
+                        game.show_game()
+                        print("--------------------")
+                    break
+                else:
+                    print(f"No se encontraron juegos con el genero {genre.name}.")
+
+def search_game_by_platform(game_list:GamesList, platform_list:PlatformsList):
+    while True:
+        platform_list.show_platform_list_with_id()
+        id = get_number("Selecciona el id de la plataforma a buscar(-1 para salir):")
+        if id >= 0:
+            try:
+                platform = platform_list.get_platform_by_id(id)
+            except:
+                print("Error:Selecciona una opcion valida")
+                break
+            else:
+                found_games = [game for game in game_list.get_list() if game.platform.id == platform.id]
+                if found_games:
+                    print(f"Se encontraron {len(found_games)} juegos en la plataforma {platform.name}:")
+                    for game in found_games:
+                        game.show_game()
+                        print("--------------------")
+                    break
+                else:
+                    print(f"No se encontraron juegos en la plataforma {platform.name}.")
+
+def search_game_by_completed(game_list:GamesList):
+    completed_games = [game for game in game_list.get_list() if game.completed]
+    if completed_games:
+        print(f"Se encontraron {len(completed_games)} juegos completados:")
+        for game in completed_games:
+            game.show_game()
+            print("--------------------")
+    else:
+        print("No se encontraron juegos completados.")
+
+def search_game_by_not_completed(game_list:GamesList):
+    not_completed_games = [game for game in game_list.get_list() if not game.completed]
+    if not_completed_games:
+        print(f"Se encontraron {len(not_completed_games)} juegos pendientes:")
+        for game in not_completed_games:
+            game.show_game()
+            print("--------------------")
+    else:
+        print("No se encontraron juegos pendientes.")
 
 def main_menu():
     print("""Menu
@@ -757,7 +858,7 @@ def main():
         elif opc == 3:
             completed_game_process(game_list)
         elif opc == 4:
-            pass
+            search_game_process(game_list,genre_list,platform_list)
         elif opc == 5:
             pass
         elif opc == 6:
